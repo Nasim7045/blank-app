@@ -1,8 +1,5 @@
 import streamlit as st
 
-# Page Configurations
-st.set_page_config(page_title="Login Page", layout="centered")
-
 # Dummy credentials
 credentials = {
     'user1': 'password1',
@@ -13,14 +10,13 @@ credentials = {
 def login(user, password):
     return credentials.get(user) == password
 
-# Function for registering new users
+# Function for registering new users (still dummy for now)
 def register(user, password):
     if user in credentials:
         return False
-    credentials[user] = password
+    credentials[user] = password  # Add new user to the dummy credentials
     return True
 
-# Main function
 def main():
     st.title('Hello, this is my first Streamlit APP')
 
@@ -37,8 +33,7 @@ def main():
         st.write("You have logged in.")
         if st.button("Logout"):
             st.session_state["logged_in"] = False
-            st.session_state["forgot_password"] = False
-            st.session_state["register"] = False
+            st.rerun()  # Immediately reload the app after logout
 
     # Forgot password page
     elif st.session_state["forgot_password"]:
@@ -47,6 +42,7 @@ def main():
         if st.button("Submit"):
             st.success(f"Password recovery instructions have been sent to {email}")
             st.session_state["forgot_password"] = False
+            st.rerun()  # Reload the app after password recovery
 
     # Registration page
     elif st.session_state["register"]:
@@ -60,6 +56,7 @@ def main():
                 if register(new_user, new_password):
                     st.success("Registration successful! You can now log in.")
                     st.session_state["register"] = False
+                    st.rerun()  # Reload the app after registration
                 else:
                     st.error("Username already exists. Please choose another.")
             else:
@@ -67,25 +64,31 @@ def main():
 
         if st.button("Back to Login"):
             st.session_state["register"] = False
+            st.rerun()  # Reload the app to show the login page
 
     # Login form
     else:
         st.subheader("Login Page")
         user = st.text_input("Username")
         password = st.text_input("Password", type="password")
+
+        # Login button click handling
         if st.button("Login"):
             if login(user, password):
                 st.session_state["logged_in"] = True
+                st.rerun()  # Immediately reload the app after login
             else:
                 st.error("Invalid Username or Password")
 
         # Forgot password link
         if st.button("Forgot Password"):
             st.session_state["forgot_password"] = True
+            st.rerun()  # Reload the app to show the password recovery page
 
         # Sign-up link
         if st.button("Sign Up"):
             st.session_state["register"] = True
+            st.rerun()  # Reload the app to show the registration page
 
 # Run the app
 if __name__ == '__main__':
