@@ -87,3 +87,23 @@ def main():
         if st.button("Back to Login"):
             st.session_state["register"] = False
             st.rerun()
+
+    else:
+        st.subheader("Login")
+        email = st.text_input("Enter your email")
+        password = st.text_input("Enter your password", type="password")
+
+        if st.button("Login"):
+            user = login_user(email, password)
+            if user:
+                st.session_state["logged_in"] = True
+                st.rerun()
+            else:
+                st.error("Invalid email or password")
+
+        if st.button("Sign Up"):
+            st.session_state["register"] = True
+            st.rerun()
+
+if __name__ == '__main__':
+    main()
